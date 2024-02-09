@@ -1,0 +1,29 @@
+version: '3'
+services:
+  # Node.js service
+  books-api:
+    container_name: books-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    environment:
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    depends_on:
+      - db
+    links:
+      - db
+    command: npm run dev
+    volumes:
+      - .:/usr/app
+
+  # PostgreSQL service
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5433:5432"
