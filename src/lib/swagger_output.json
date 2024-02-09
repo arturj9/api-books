@@ -1,0 +1,871 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "v1.0.0",
+    "title": "Library",
+    "description": "Bibioteca simples."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": ""
+    },
+    {
+      "name": "User",
+      "description": ""
+    },
+    {
+      "name": "Book",
+      "description": ""
+    },
+    {
+      "name": "Booking",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description": "Criado"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegister"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/info": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/list": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/PageQuery"
+          },
+          {
+            "$ref": "#/components/parameters/PageSizeQuery"
+          },
+          {
+            "$ref": "#/components/parameters/SearchQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/patch": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description": "Criado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPatch"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/delete": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Nenhum Conteúdo"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/books/register": {
+      "post": {
+        "tags": [
+          "Book"
+        ],
+        "description": "",
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description": "Criado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookRegister"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/books/list/": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageQuery"
+          },
+          {
+            "$ref": "#/components/parameters/PageSizeQuery"
+          },
+          {
+            "$ref": "#/components/parameters/SearchQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/books/patch/{id}": {
+      "patch": {
+        "tags": [
+          "Book"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description": "Criado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookPatch"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/books/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Book"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Nenhum Conteúdo"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/books/categories": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageQuery"
+          },
+          {
+            "$ref": "#/components/parameters/PageSizeQuery"
+          },
+          {
+            "$ref": "#/components/parameters/SearchQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookCategoryResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/bookings/register": {
+      "post": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultResponse"
+                }
+              }
+            },
+            "description": "Criado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingRegister"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/bookings/list": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/PageQuery"
+          },
+          {
+            "$ref": "#/components/parameters/PageSizeQuery"
+          },
+          {
+            "$ref": "#/components/parameters/SearchQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "DefaultResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "message"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "email@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDcyMTgyOTgsImV4cCI6MTcwNzMwNDY5OCwic3ViIjoiZmQ3MmIyMzMtMzJmNi00Y2ZiLWE1ZmEtMTk0NDY3MmJiM2E0In0.JPQGJRaXsZG4UakiXbT2AZyxKmk9JhWtmFBxzZxRdTY"
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "UserRegister": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "username"
+          },
+          "name": {
+            "type": "string",
+            "example": "name"
+          },
+          "email": {
+            "type": "string",
+            "example": "email@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
+        },
+        "required": [
+          "username",
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "UserPatch": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "username"
+          },
+          "name": {
+            "type": "string",
+            "example": "name"
+          },
+          "email": {
+            "type": "string",
+            "example": "email@email.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
+          },
+          "username": {
+            "type": "string",
+            "example": "username"
+          },
+          "name": {
+            "type": "string",
+            "example": "name"
+          },
+          "email": {
+            "type": "string",
+            "example": "email@email.com"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "year-mouth-day"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "year-mouth-day"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "name",
+          "email",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "BookRegister": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "title"
+          },
+          "cod": {
+            "type": "string",
+            "example": "cod"
+          },
+          "editora": {
+            "type": "string",
+            "example": "editora"
+          },
+          "autor": {
+            "type": "string",
+            "example": "autor"
+          },
+          "sinopse": {
+            "type": "string",
+            "example": "sinopse"
+          },
+          "bookCategoryId": {
+            "type": "string",
+            "example": "729c1ed8-93bf-4e1a-9d48-d4dec11e57e7"
+          },
+          "qtd": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "title",
+          "cod",
+          "editora",
+          "autor",
+          "sinopse",
+          "bookCategoryId",
+          "qtd"
+        ]
+      },
+      "BookPatch": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "title"
+          },
+          "cod": {
+            "type": "string",
+            "example": "cod"
+          },
+          "editora": {
+            "type": "string",
+            "example": "editora"
+          },
+          "autor": {
+            "type": "string",
+            "example": "autor"
+          },
+          "sinopse": {
+            "type": "string",
+            "example": "sinopse"
+          },
+          "bookCategoryId": {
+            "type": "string",
+            "example": "729c1ed8-93bf-4e1a-9d48-d4dec11e57e7"
+          },
+          "qtd": {
+            "type": "number",
+            "example": 1
+          }
+        }
+      },
+      "BookResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
+          },
+          "title": {
+            "type": "string",
+            "example": "title"
+          },
+          "cod": {
+            "type": "string",
+            "example": "cod"
+          },
+          "editora": {
+            "type": "string",
+            "example": "editora"
+          },
+          "autor": {
+            "type": "string",
+            "example": "autor"
+          },
+          "sinopse": {
+            "type": "string",
+            "example": "sinopse"
+          },
+          "bookCategoryId": {
+            "type": "string",
+            "example": "729c1ed8-93bf-4e1a-9d48-d4dec11e57e7"
+          },
+          "qtd": {
+            "type": "number",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "year-mouth-day"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "year-mouth-day"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "cod",
+          "editora",
+          "autor",
+          "sinopse",
+          "bookCategoryId",
+          "qtd",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "BookCategoryResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
+            },
+            "name": {
+              "type": "string",
+              "example": "name"
+            },
+            "createdAt": {
+              "type": "string",
+              "example": "year-mouth-day"
+            },
+            "updatedAt": {
+              "type": "string",
+              "example": "year-mouth-day"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "createdAt",
+            "updatedAt"
+          ]
+        }
+      },
+      "BookingRegister": {
+        "type": "object",
+        "properties": {
+          "bookId": {
+            "type": "string",
+            "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
+          }
+        },
+        "required": [
+          "bookId"
+        ]
+      },
+      "BookingResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
+          },
+          "userId": {
+            "type": "string",
+            "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
+          },
+          "bookId": {
+            "type": "string",
+            "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "year-mouth-day"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "year-mouth-day"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "bookId",
+          "createdAt",
+          "updatedAt"
+        ]
+      }
+    },
+    "parameters": {
+      "PageQuery": {
+        "name": "page",
+        "in": "query",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "PageSizeQuery": {
+        "name": "pageSize",
+        "in": "query",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "SearchQuery": {
+        "name": "search",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
