@@ -13,5 +13,9 @@ RUN npm install
 # Copie o restante do código-fonte da aplicação
 COPY . .
 
+RUN npx prisma generate
+
 # Exponha a porta que a aplicação vai ouvir
-EXPOSE 3333
+EXPOSE 8080
+
+CMD ["npm", "run", "dev"]

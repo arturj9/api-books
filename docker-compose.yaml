@@ -7,14 +7,13 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3333:3333"
+      - "8080:8080"
     environment:
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
     depends_on:
       - db
     links:
       - db
-    command: npm run dev
     volumes:
       - .:/usr/app
 
