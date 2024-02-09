@@ -1,12 +1,21 @@
 import { Router } from 'express';
-import { helloWorldRoutes } from './HelloWorldRoutes';
-// import { usersRoutes } from './UsersRoutes';
-// import { authenticateRoutes } from './AuthenticateRoutes';
+import { ensureAuthenticate } from '../middlewares/ensureAuthenticate';
+import { authRoutes } from './authRoutes';
+import { bookRoutes } from './booksRoutes';
+import { bookingRoutes } from './bookingsRoutes';
+
 
 const routes = Router();
 
-routes.use('/hello-world', helloWorldRoutes);
-// routes.use('/users', usersRoutes);
-// routes.use('/sessions', authenticateRoutes);
+routes.use('/auth', authRoutes);
+routes.use('/books', bookRoutes /*
+#swagger.tags = ['Book']
+*/)
+routes.use('/bookings', ensureAuthenticate, bookingRoutes /* 
+#swagger.tags = ['Booking']
+#swagger.security = [{
+            "bearerAuth": []
+    }]
+*/)
 
 export { routes };
