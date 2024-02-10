@@ -7,7 +7,12 @@
   },
   "servers": [
     {
-      "url": "https://api-books.fly.dev/"
+      "url": "http://localhost:8080/",
+      "description": "Local"
+    },
+    {
+      "url": "https://api-books.fly.dev/",
+      "description": "Produção"
     }
   ],
   "tags": [

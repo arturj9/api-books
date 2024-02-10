@@ -1,7 +1,3 @@
-import config_values from "../config";
-
-const port = config_values.port;
-
 import swaggerAutogen from "swagger-autogen";
 
 const doc = {
@@ -10,7 +6,16 @@ const doc = {
     title: "Library",
     description: "Bibioteca simples.",
   },
-  host: `localhost:${port}`,
+  servers: [
+    {
+      url: 'http://localhost:8080/',            
+      description: 'Local'      
+    },
+    {
+      url: 'https://api-books.fly.dev/',             
+      description: 'Produção'     
+    },
+  ],
   tags: [
     {
       name: "Auth",

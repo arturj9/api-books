@@ -1,1 +1,7 @@
-# api-books
+# API - Books
+
+## Executar
+
+```
+docker compose up
+```

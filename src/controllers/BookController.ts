@@ -55,12 +55,14 @@ export class BookController {
     const pageNumber = parseInt(page, 10);
 
     // Verifique se a conversão foi bem-sucedida
-    if (isNaN(pageNumber)) new AppError("O parâmetro pageSize deve ser um número.");
+    if (isNaN(pageNumber) || pageNumber <= 0)
+      throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
 
     const pageSizeNumber = parseInt(pageSize, 10);
 
     // Verifique se a conversão foi bem-sucedida
-    if (isNaN(pageSizeNumber)) new AppError("O parâmetro pageSize deve ser um número.");
+    if (isNaN(pageSizeNumber) || pageSizeNumber <= 0)
+      throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
 
     const body = await this.service.list(pageNumber, pageSizeNumber, search);
     return { status: 200, body: body };
@@ -81,14 +83,20 @@ export class BookController {
     const pageNumber = parseInt(page, 10);
 
     // Verifique se a conversão foi bem-sucedida
-    if (isNaN(pageNumber)) new AppError("O parâmetro pageSize deve ser um número.");
+    if (isNaN(pageNumber) || pageNumber <= 0)
+      throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
 
     const pageSizeNumber = parseInt(pageSize, 10);
 
     // Verifique se a conversão foi bem-sucedida
-    if (isNaN(pageSizeNumber)) new AppError("O parâmetro pageSize deve ser um número.");
+    if (isNaN(pageSizeNumber) || pageSizeNumber <= 0)
+      throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
 
-    const body = await this.service.listBooksCategories(pageNumber, pageSizeNumber, search);
+    const body = await this.service.listBooksCategories(
+      pageNumber,
+      pageSizeNumber,
+      search
+    );
     return { status: 200, body: body };
   }
 
