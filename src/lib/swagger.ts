@@ -8,12 +8,12 @@ const doc = {
   },
   servers: [
     {
-      url: 'http://localhost:8080/',            
-      description: 'Local'      
-    },
-    {
       url: 'https://api-books.fly.dev/',             
       description: 'Produção'     
+    },
+    {
+      url: 'http://localhost:8080/',            
+      description: 'Local'      
     },
   ],
   tags: [
@@ -64,14 +64,14 @@ const doc = {
         email: "email@email.com",
         password: "password",
       },
-      UserResponse:{
+      UserResponse:[{
         $id: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
         $username: "username",
         $name: "name",
         $email: "email@email.com",
         $createdAt: "year-mouth-day",
         $updatedAt: "year-mouth-day"
-      },
+      },],
       BookRegister: {
         $title: "title",
         $cod: "cod",
@@ -90,7 +90,7 @@ const doc = {
         bookCategoryId: "729c1ed8-93bf-4e1a-9d48-d4dec11e57e7",
         qtd: 1,
       },
-      BookResponse:{
+      BookResponse:[{
         $id: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
         $title: "title",
         $cod: "cod",
@@ -99,9 +99,10 @@ const doc = {
         $sinopse: "sinopse",
         $bookCategoryId: "729c1ed8-93bf-4e1a-9d48-d4dec11e57e7",
         $qtd: 1,
+        $idUser: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
         $createdAt: "year-mouth-day",
         $updatedAt: "year-mouth-day"
-      },
+      },],
       BookCategoryResponse:[{
         $id: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
         $name: "name",
@@ -111,13 +112,13 @@ const doc = {
       BookingRegister: {
         $bookId: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
       },
-      BookingResponse:{
+      BookingResponse:[{
         $id: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
-        $userId: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
+        $idUser: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
         $bookId: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
         $createdAt: "year-mouth-day",
         $updatedAt: "year-mouth-day"
-      },
+      },],
     },
     parameters: {
       PageQuery: {

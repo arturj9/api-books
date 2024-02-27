@@ -19,7 +19,7 @@ export class AuthService {
 
     if (!user) throw new AppError("Email ou senha inválidos", 401);
 
-    const passwordMatch = await compare(password, user.password_hash);
+    const passwordMatch = await compare(password, user.passwordHash);
 
     if (!passwordMatch) throw new AppError("Email ou senha inválidos", 401);
 
@@ -46,9 +46,9 @@ export class AuthService {
 
     if (userNameExists) throw new AppError("Username já cadastrado", 409);
 
-    const password_hash = await hash(password, 6);
+    const passwordHash = await hash(password, 6);
 
-    await this.repository.save(username, name, email, password_hash);
+    await this.repository.save(username, name, email, passwordHash);
 
     return { message: "Usuário criado com sucesso" };
   }
@@ -63,6 +63,16 @@ export class AuthService {
   async list(page: number, pageSize: number, search: string) {
     let totalItems = await this.repository.countAll();
     let totalPages = Math.ceil(totalItems / pageSize);
+    if (totalItems == 0)
+      return {
+        users: [],
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems,
+          totalPages,
+        },
+      };
     if (search == "") {
       const users = await this.repository.find(page, pageSize);
       return {
@@ -83,7 +93,7 @@ export class AuthService {
     let user = await this.repository.findByUserName(search);
     if (user)
       return {
-        user: user,
+        users: [user],
         pageInfo: {
           page,
           pageSize,
@@ -95,7 +105,7 @@ export class AuthService {
     user = await this.repository.findByName(search);
     if (user)
       return {
-        user: user,
+        users: [user],
         pageInfo: {
           page,
           pageSize,
@@ -107,7 +117,7 @@ export class AuthService {
     user = await this.repository.findById(search);
     if (user)
       return {
-        user: user,
+        users: [user],
         pageInfo: {
           page,
           pageSize,
@@ -116,7 +126,17 @@ export class AuthService {
         },
       };
 
-    return { user: {} };
+    totalItems = 0;
+
+    return {
+      users: [],
+      pageInfo: {
+        page,
+        pageSize,
+        totalItems,
+        totalPages,
+      },
+    };
   }
 
   // patch

@@ -28,6 +28,8 @@ export class BookController {
     const { title, cod, editora, autor, sinopse, bookCategoryId, qtd } =
       bodySchema.parse(request.body);
 
+    const { idUser } = request;
+
     const body = await this.service.register(
       title,
       cod,
@@ -35,7 +37,8 @@ export class BookController {
       autor,
       sinopse,
       bookCategoryId,
-      qtd
+      qtd,
+      idUser
     );
     return { status: 201, body: body };
   }
@@ -56,15 +59,58 @@ export class BookController {
 
     // Verifique se a conversão foi bem-sucedida
     if (isNaN(pageNumber) || pageNumber <= 0)
-      throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
+      throw new AppError(
+        "O parâmetro pageSize deve ser um número e maior que 0."
+      );
 
     const pageSizeNumber = parseInt(pageSize, 10);
 
     // Verifique se a conversão foi bem-sucedida
     if (isNaN(pageSizeNumber) || pageSizeNumber <= 0)
-      throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
+      throw new AppError(
+        "O parâmetro pageSize deve ser um número e maior que 0."
+      );
 
     const body = await this.service.list(pageNumber, pageSizeNumber, search);
+    return { status: 200, body: body };
+  }
+
+  // list by user
+  async listByUser(request: Request) {
+    const bodySchema = z
+      .object({
+        page: z.string().default("1"),
+        pageSize: z.string().default("10"),
+        search: z.string().default(""),
+      })
+      .strict();
+
+    const { idUser } = request;
+
+    let { page, pageSize, search } = bodySchema.parse(request.query);
+
+    const pageNumber = parseInt(page, 10);
+
+    // Verifique se a conversão foi bem-sucedida
+    if (isNaN(pageNumber) || pageNumber <= 0)
+      throw new AppError(
+        "O parâmetro pageSize deve ser um número e maior que 0."
+      );
+
+    const pageSizeNumber = parseInt(pageSize, 10);
+
+    // Verifique se a conversão foi bem-sucedida
+    if (isNaN(pageSizeNumber) || pageSizeNumber <= 0)
+      throw new AppError(
+        "O parâmetro pageSize deve ser um número e maior que 0."
+      );
+
+    const body = await this.service.listByUser(
+      idUser,
+      pageNumber,
+      pageSizeNumber,
+      search
+    );
     return { status: 200, body: body };
   }
 
@@ -84,13 +130,17 @@ export class BookController {
 
     // Verifique se a conversão foi bem-sucedida
     if (isNaN(pageNumber) || pageNumber <= 0)
-      throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
+      throw new AppError(
+        "O parâmetro pageSize deve ser um número e maior que 0."
+      );
 
     const pageSizeNumber = parseInt(pageSize, 10);
 
     // Verifique se a conversão foi bem-sucedida
     if (isNaN(pageSizeNumber) || pageSizeNumber <= 0)
-      throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
+      throw new AppError(
+        "O parâmetro pageSize deve ser um número e maior que 0."
+      );
 
     const body = await this.service.listBooksCategories(
       pageNumber,
@@ -118,6 +168,8 @@ export class BookController {
 
     if (!id) throw new AppError("id de livro é requerido", 409);
 
+    const { idUser } = request;
+
     const { title, cod, editora, autor, sinopse, bookCategoryId, qtd } =
       bodySchema.parse(request.body);
 
@@ -131,7 +183,7 @@ export class BookController {
       qtd
     );
 
-    const body = await this.service.patch(id, data);
+    const body = await this.service.patch(idUser, id, data);
     return { status: 201, body: body };
   }
 
@@ -141,7 +193,9 @@ export class BookController {
 
     if (!id) throw new AppError("id de livro é requerido", 409);
 
-    await this.service.delete(id);
+    const { idUser } = request;
+
+    await this.service.delete(idUser, id);
     return { status: 204, body: null };
   }
 }

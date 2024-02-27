@@ -8,7 +8,7 @@ export class UserRepository {
     username: string,
     name: string,
     email: string,
-    password_hash: string
+    passwordHash: string
   ) {
     try {
       await prisma.user.create({
@@ -16,10 +16,11 @@ export class UserRepository {
           username,
           name,
           email,
-          password_hash,
+          passwordHash,
         },
       });
     } catch (error) {
+      console.error(error);
       throw new AppError("Erro ao salvar usuário", 500);
     }
   }
@@ -87,6 +88,7 @@ export class UserRepository {
         data,
       });
     } catch (error) {
+      console.error(error);
       throw new AppError("Erro ao atualizar usuário", 500);
     }
   }
@@ -117,6 +119,7 @@ export class UserRepository {
         },
       });
     } catch (error) {
+      console.error(error);
       throw new AppError("Erro ao deletar usuário", 500);
     }
   }

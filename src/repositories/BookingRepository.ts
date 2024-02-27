@@ -34,7 +34,7 @@ export class BookingRepository {
 
     return bookings.length > 0
       ? bookings.map((booking) => new Booking(booking))
-      : [];
+      : null;
   }
 
   // findByUserAndBook
@@ -75,7 +75,7 @@ export class BookingRepository {
 
     await Promise.all(promises);
 
-    return bookingsByBook;
+    return bookingsByBook.length>0 ? bookingsByBook : null;
   }
 
   // countAllBookingsByUser

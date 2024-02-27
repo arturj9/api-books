@@ -11,7 +11,8 @@ export class BookRepository {
     autor: string,
     sinopse: string,
     bookCategoryId: string,
-    qtd: number
+    qtd: number,
+    idUser: string
   ) {
     try {
       await prisma.book.create({
@@ -23,9 +24,11 @@ export class BookRepository {
           sinopse,
           bookCategoryId,
           qtd,
+          idUser,
         },
       });
     } catch (error) {
+      console.error(error);
       throw new AppError("Erro ao salvar livro", 500);
     }
   }
@@ -62,12 +65,66 @@ export class BookRepository {
       take: pageSize,
     });
 
-    return books.length > 0 ? books.map((book) => new Book(book)) : [];
+    return books.length > 0 ? books.map((book) => new Book(book)) : null;
+  }
+
+  // find by author and user
+  async findByAuthorAndUser(
+    idUser: string,
+    page: number,
+    pageSize: number,
+    autor: string
+  ) {
+    const books = await prisma.book.findMany({
+      where: { idUser, autor },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+
+    return books.length > 0 ? books.map((book) => new Book(book)) : null;
+  }
+
+  // find by category
+  async findByCategory(page: number, pageSize: number, category: string) {
+    const books = await prisma.book.findMany({
+      where: { bookCategoryId: category },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+
+    return books.length > 0 ? books.map((book) => new Book(book)) : null;
+  }
+
+  // find by category and user
+  async findByCategoryAndUser(
+    idUser: string,
+    page: number,
+    pageSize: number,
+    category: string
+  ) {
+    const books = await prisma.book.findMany({
+      where: { idUser, bookCategoryId: category },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+
+    return books.length > 0 ? books.map((book) => new Book(book)) : null;
   }
 
   // find
   async find(page: number, pageSize: number) {
     const books = await prisma.book.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+
+    return books.length > 0 ? books.map((book) => new Book(book)) : [];
+  }
+
+  // findByUser
+  async findByUser(idUser: string, page: number, pageSize: number) {
+    const books = await prisma.book.findMany({
+      where: { idUser },
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -81,6 +138,14 @@ export class BookRepository {
     return books.length;
   }
 
+  // contAllByUser
+  async countAllByUser(idUser: string) {
+    const books = await prisma.book.findMany({
+      where: { idUser },
+    });
+    return books.length;
+  }
+
   // patch
   async patch(id: string, data: object) {
     try {
@@ -89,6 +154,7 @@ export class BookRepository {
         data,
       });
     } catch (error) {
+      console.error(error);
       throw new AppError("Erro ao atualizar livro", 500);
     }
   }
@@ -119,6 +185,7 @@ export class BookRepository {
         },
       });
     } catch (error) {
+      console.error(error);
       throw new AppError("Erro ao deletar livro", 500);
     }
   }
@@ -132,7 +199,7 @@ export class BookRepository {
 
     return booksCategories.length > 0
       ? booksCategories.map((bookCategory) => new BookCategory(bookCategory))
-      : [];
+      : null;
   }
 
   // cont all books categories

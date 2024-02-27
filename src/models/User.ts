@@ -20,7 +20,7 @@ export class UserUpdate {
   username: string | null | undefined;
   name: string | null | undefined;
   email: string | null | undefined;
-  password_hash: string | null | undefined;
+  passwordHash: string | null | undefined;
   constructor(
     username: string | null | undefined,
     name: string | null | undefined,
@@ -30,7 +30,7 @@ export class UserUpdate {
     name ? this.name = name : null;
     email ? this.email = email : null;
   }
-  setPasswordHash(password_hash: string) {
-    password_hash ? this.password_hash = password_hash : null;
+  setPasswordHash(passwordHash: string) {
+    passwordHash ? this.passwordHash = passwordHash : null;
   }
 }

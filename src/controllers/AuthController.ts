@@ -50,9 +50,9 @@ export class AuthController {
 
   // info
   async info(request: Request) {
-    const { userId } = request;
+    const { idUser } = request;
     
-    const body = await this.service.info(userId);
+    const body = await this.service.info(idUser);
     return { status: 200, body: body };
 
   }
@@ -97,7 +97,7 @@ export class AuthController {
       })
       .strict();
 
-    const { userId } = request;
+    const { idUser } = request;
     const { username, name, email, password } = bodySchema.parse(request.body);
 
     
@@ -108,15 +108,15 @@ export class AuthController {
       data.setPasswordHash(password_hash);
     }
 
-    const body = await this.service.patch(userId, data);
+    const body = await this.service.patch(idUser, data);
     return { status: 201, body: body };
   }
 
   // delete
   async delete(request: Request) {
-    const { userId } = request;
+    const { idUser } = request;
 
-    await this.service.delete(userId);
+    await this.service.delete(idUser);
     return {status:204, body:null};
   }
 }

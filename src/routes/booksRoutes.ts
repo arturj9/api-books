@@ -57,6 +57,31 @@ bookRoutes.get("/list/", async (request: Request, response: Response) => {
   response.status(status).json(body);
 });
 
+// list
+bookRoutes.get(
+  "/listByUser/",
+  ensureAuthenticate,
+  async (request: Request, response: Response) => {
+    /*
+    #swagger.parameters['$ref'] = ['#/components/parameters/PageQuery', '#/components/parameters/PageSizeQuery', '#/components/parameters/SearchQuery'] 
+    #swagger.responses[200] = {
+              content: {
+                  "application/json": {
+                      schema:{
+                          $ref: "#/components/schemas/BookResponse"
+                      }
+                  }           
+              }
+          }  
+    #swagger.security = [{
+            "bearerAuth": []
+    }]
+    */
+    const { status, body } = await bookController.listByUser(request);
+    response.status(status).json(body);
+  }
+);
+
 // patch
 bookRoutes.patch(
   "/patch/:id",
@@ -113,15 +138,9 @@ bookRoutes.delete(
 );
 
 // list books categories
-bookRoutes.get(
-  "/categories",
-  ensureAuthenticate,
-  async (request: Request, response: Response) => {
-    /*
+bookRoutes.get("/categories/", async (request: Request, response: Response) => {
+  /*
     #swagger.parameters['$ref'] = ['#/components/parameters/PageQuery', '#/components/parameters/PageSizeQuery', '#/components/parameters/SearchQuery'] 
-    #swagger.security = [{
-            "bearerAuth": []
-    }]
     #swagger.responses[200] = {
             content: {
                 "application/json": {
@@ -132,9 +151,8 @@ bookRoutes.get(
             }
         }   
      */
-    const { status, body } = await bookController.listBooksCategories(request);
-    response.status(status).json(body);
-  }
-);
+  const { status, body } = await bookController.listBooksCategories(request);
+  response.status(status).json(body);
+});
 
 export { bookRoutes };

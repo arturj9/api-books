@@ -17,7 +17,8 @@ export class BookService {
     autor: string,
     sinopse: string,
     bookCategoryId: string,
-    qtd: number
+    qtd: number,
+    idUser: string
   ) {
     const bookCategoryIdExists = await this.repository.findBookCategoryById(
       bookCategoryId
@@ -38,7 +39,8 @@ export class BookService {
       autor,
       sinopse,
       bookCategoryId,
-      qtd
+      qtd,
+      idUser
     );
 
     return { message: "Livro criado com sucesso" };
@@ -48,6 +50,16 @@ export class BookService {
   async list(page: number, pageSize: number, search: string) {
     let totalItems = await this.repository.countAll();
     let totalPages = Math.ceil(totalItems / pageSize);
+    if (totalItems == 0)
+      return {
+        books: [],
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems,
+          totalPages,
+        },
+      };
     if (search == "") {
       const books = await this.repository.find(page, pageSize);
       return {
@@ -73,6 +85,18 @@ export class BookService {
         },
       };
 
+    books = await this.repository.findByCategory(page, pageSize, search);
+    if (books)
+      return {
+        books: books,
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems: books.length,
+          totalPages: Math.ceil(books.length / pageSize),
+        },
+      };
+
     page = 1;
     pageSize = 1;
     totalItems = 1;
@@ -81,7 +105,7 @@ export class BookService {
     let book = await this.repository.findByTitle(search);
     if (book)
       return {
-        book: book,
+        books: [book],
         pageInfo: {
           page,
           pageSize,
@@ -93,7 +117,7 @@ export class BookService {
     book = await this.repository.findByCod(search);
     if (book)
       return {
-        book: book,
+        books: [book],
         pageInfo: {
           page,
           pageSize,
@@ -105,7 +129,7 @@ export class BookService {
     book = await this.repository.findById(search);
     if (book)
       return {
-        book: book,
+        books: [book],
         pageInfo: {
           page,
           pageSize,
@@ -114,13 +138,152 @@ export class BookService {
         },
       };
 
-    return { book: {} };
+    totalItems = 0;
+
+    return {
+      books: [],
+      pageInfo: {
+        page,
+        pageSize,
+        totalItems,
+        totalPages,
+      },
+    };
+  }
+
+  // list by user
+  async listByUser(
+    idUser: string,
+    page: number,
+    pageSize: number,
+    search: string
+  ) {
+    let totalItems = await this.repository.countAllByUser(idUser);
+    let totalPages = Math.ceil(totalItems / pageSize);
+    if (totalItems == 0)
+      return {
+        books: [],
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems,
+          totalPages,
+        },
+      };
+    if (search == "") {
+      const books = await this.repository.findByUser(idUser, page, pageSize);
+      return {
+        books: books,
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems,
+          totalPages,
+        },
+      };
+    }
+
+    let books = await this.repository.findByAuthorAndUser(
+      idUser,
+      page,
+      pageSize,
+      search
+    );
+    if (books)
+      return {
+        books: books,
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems: books.length,
+          totalPages: Math.ceil(books.length / pageSize),
+        },
+      };
+
+    books = await this.repository.findByCategoryAndUser(
+      idUser,
+      page,
+      pageSize,
+      search
+    );
+    if (books)
+      return {
+        books: books,
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems: books.length,
+          totalPages: Math.ceil(books.length / pageSize),
+        },
+      };
+
+    page = 1;
+    pageSize = 1;
+    totalItems = 1;
+    totalPages = 1;
+
+    let book = await this.repository.findByTitle(search);
+    if (book && book?.idUser == idUser)
+      return {
+        books: [book],
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems,
+          totalPages,
+        },
+      };
+
+    book = await this.repository.findByCod(search);
+    if (book && book?.idUser == idUser)
+      return {
+        books: [book],
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems,
+          totalPages,
+        },
+      };
+
+    book = await this.repository.findById(search);
+    if (book && book?.idUser == idUser)
+      return {
+        books: [book],
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems,
+          totalPages,
+        },
+      };
+    totalItems = 0;
+
+    return {
+      books: [],
+      pageInfo: {
+        page,
+        pageSize,
+        totalItems,
+        totalPages,
+      },
+    };
   }
 
   // list books categories
   async listBooksCategories(page: number, pageSize: number, search: string) {
     let totalItems = await this.repository.countAllBooksCategories();
     let totalPages = Math.ceil(totalItems / pageSize);
+    if (totalItems == 0)
+      return {
+        bookings: [],
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems,
+          totalPages,
+        },
+      };
     if (search == "") {
       const booksCategories = await this.repository.findBooksCategories(
         page,
@@ -144,7 +307,7 @@ export class BookService {
     let bookCategory = await this.repository.findBookCategoryById(search);
     if (bookCategory)
       return {
-        bookCategory: bookCategory,
+        bookCategories: [bookCategory],
         pageInfo: {
           page,
           pageSize,
@@ -156,7 +319,7 @@ export class BookService {
     bookCategory = await this.repository.findBookCategoryByName(search);
     if (bookCategory)
       return {
-        bookCategory: bookCategory,
+        bookCategories: [bookCategory],
         pageInfo: {
           page,
           pageSize,
@@ -164,14 +327,25 @@ export class BookService {
           totalPages,
         },
       };
+    totalItems = 0;
 
-    return { bookCategory: {} };
+    return {
+      bookCategories: [],
+      pageInfo: {
+        page,
+        pageSize,
+        totalItems,
+        totalPages,
+      },
+    };
   }
 
   // patch
-  async patch(id: string, data: BookUpdate) {
+  async patch(idUser: string, id: string, data: BookUpdate) {
     const livroExists = await this.repository.findById(id);
     if (!livroExists) throw new AppError("Livro não cadastrado", 404);
+
+    if (livroExists.idUser != idUser) throw new AppError("Não autorizado", 401);
 
     if (data.title) {
       data.title ? null : (data.title = "");
@@ -199,9 +373,11 @@ export class BookService {
   }
 
   // delete
-  async delete(id: string) {
+  async delete(idUser: string, id: string) {
     const livroExists = await this.repository.findById(id);
     if (!livroExists) throw new AppError("Livro não cadastrado", 404);
+
+    if (livroExists.idUser != idUser) throw new AppError("Não autorizado", 401);
 
     await this.repository.delete(id);
   }

@@ -7,6 +7,7 @@ export class Book {
   sinopse: string;
   bookCategoryId: string;
   qtd: number;
+  idUser: string;
   createdAt: Date;
   updatedAt: Date;
   constructor(data: Book) {
@@ -18,6 +19,7 @@ export class Book {
     this.sinopse = data.sinopse;
     this.bookCategoryId = data.bookCategoryId;
     this.qtd = data.qtd;
+    this.idUser = data.idUser;
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
   }

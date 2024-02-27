@@ -16,12 +16,15 @@ model User {
   username      String    @unique
   name          String
   email         String    @unique
-  password_hash String
+  passwordHash String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   // Relacionamento com a tabela Booking
   bookings      Booking[]
+
+  // Relacionamento com a tabela Book
+  books     Book[]
 
   @@map("users")
 }
@@ -35,6 +38,7 @@ model Book {
   sinopse         String
   bookCategoryId String        @map("bookCategoryId")
   qtd             Int
+  idUser          String
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -43,6 +47,9 @@ model Book {
 
   // Relacionamento com a tabela Booking
   bookings        Booking[]
+
+  // Relacionamentos com as tabelas User
+  user      User      @relation(fields: [idUser], references: [id])
 
   @@map("books")
 }

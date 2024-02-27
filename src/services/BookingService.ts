@@ -1,7 +1,6 @@
 import { AppError } from "../errors/AppError";
 import { BookingRepository } from "repositories/BookingRepository";
 import { BookRepository } from "repositories/BookRepository";
-import { BookUpdate } from "models/Book";
 
 export class BookingService {
   bookingRepository: BookingRepository;
@@ -27,21 +26,31 @@ export class BookingService {
 
   // list by user
   async listByUser(
-    userId: string,
+    idUser: string,
     page: number,
     pageSize: number,
     search: string
   ) {
-    let totalItems = await this.bookingRepository.countAllByUser(userId);
+    let totalItems = await this.bookingRepository.countAllByUser(idUser);
     let totalPages = Math.ceil(totalItems / pageSize);
+    if (totalItems == 0)
+      return {
+        bookings: [],
+        pageInfo: {
+          page,
+          pageSize,
+          totalItems,
+          totalPages,
+        },
+      };
     if (search == "") {
       const bookings = await this.bookingRepository.findByUser(
-        userId,
+        idUser,
         page,
         pageSize
       );
       return {
-        bookings: bookings,
+        bookings: [bookings],
         pageInfo: {
           page,
           pageSize,
@@ -52,14 +61,15 @@ export class BookingService {
     }
 
     let bookings = await this.bookingRepository.findByUserAndBook(
-      userId,
+      idUser,
       page,
       pageSize,
       search
     );
+
     if (bookings)
       return {
-        bookings: bookings,
+        bookings: [bookings],
         pageInfo: {
           page,
           pageSize,
@@ -68,6 +78,16 @@ export class BookingService {
         },
       };
 
-    return { bookings: [] };
+    totalItems = 0;
+
+    return {
+      bookings: [],
+      pageInfo: {
+        page,
+        pageSize,
+        totalItems,
+        totalPages,
+      },
+    };
   }
 }

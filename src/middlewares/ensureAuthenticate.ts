@@ -18,7 +18,7 @@ export async function ensureAuthenticate(
 
   try {
     const { sub } = jwt.verify(token, config_values.jwt_key);
-    request.userId = sub as string;
+    request.idUser = sub as string;
 
     return next();
   } catch (error) {

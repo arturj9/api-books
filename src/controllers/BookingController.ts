@@ -19,11 +19,11 @@ export class BookingController {
       })
       .strict();
 
-    const { userId } = request;
+    const { idUser } = request;
 
     const { bookId } = bodySchema.parse(request.body);
 
-    const body = await this.service.register(userId, bookId);
+    const body = await this.service.register(idUser, bookId);
     return { status: 201, body: body };
   }
 
@@ -51,8 +51,8 @@ export class BookingController {
     if (isNaN(pageSizeNumber) || pageSizeNumber <= 0)
       throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
     
-    const { userId } = request;
-    const body = await this.service.listByUser(userId, pageNumber, pageSizeNumber, search);
+    const { idUser } = request;
+    const body = await this.service.listByUser(idUser, pageNumber, pageSizeNumber, search);
     return { status: 200, body: body };
   }
 }
