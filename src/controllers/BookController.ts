@@ -50,10 +50,13 @@ export class BookController {
         page: z.string().default("1"),
         pageSize: z.string().default("10"),
         search: z.string().default(""),
+        categoryId: z.string().default(""),
       })
       .strict();
 
-    let { page, pageSize, search } = bodySchema.parse(request.query);
+    let { page, pageSize, search, categoryId } = bodySchema.parse(
+      request.query
+    );
 
     const pageNumber = parseInt(page, 10);
 
@@ -71,7 +74,12 @@ export class BookController {
         "O parâmetro pageSize deve ser um número e maior que 0."
       );
 
-    const body = await this.service.list(pageNumber, pageSizeNumber, search);
+    const body = await this.service.list(
+      pageNumber,
+      pageSizeNumber,
+      search,
+      categoryId
+    );
     return { status: 200, body: body };
   }
 
@@ -82,12 +90,15 @@ export class BookController {
         page: z.string().default("1"),
         pageSize: z.string().default("10"),
         search: z.string().default(""),
+        categoryId: z.string().default(""),
       })
       .strict();
 
     const { idUser } = request;
 
-    let { page, pageSize, search } = bodySchema.parse(request.query);
+    let { page, pageSize, search, categoryId } = bodySchema.parse(
+      request.query
+    );
 
     const pageNumber = parseInt(page, 10);
 
@@ -109,7 +120,8 @@ export class BookController {
       idUser,
       pageNumber,
       pageSizeNumber,
-      search
+      search,
+      categoryId
     );
     return { status: 200, body: body };
   }
@@ -118,35 +130,13 @@ export class BookController {
   async listBooksCategories(request: Request) {
     const bodySchema = z
       .object({
-        page: z.string().default("1"),
-        pageSize: z.string().default("10"),
         search: z.string().default(""),
       })
       .strict();
 
-    let { page, pageSize, search } = bodySchema.parse(request.query);
+    let { search } = bodySchema.parse(request.query);
 
-    const pageNumber = parseInt(page, 10);
-
-    // Verifique se a conversão foi bem-sucedida
-    if (isNaN(pageNumber) || pageNumber <= 0)
-      throw new AppError(
-        "O parâmetro pageSize deve ser um número e maior que 0."
-      );
-
-    const pageSizeNumber = parseInt(pageSize, 10);
-
-    // Verifique se a conversão foi bem-sucedida
-    if (isNaN(pageSizeNumber) || pageSizeNumber <= 0)
-      throw new AppError(
-        "O parâmetro pageSize deve ser um número e maior que 0."
-      );
-
-    const body = await this.service.listBooksCategories(
-      pageNumber,
-      pageSizeNumber,
-      search
-    );
+    const body = await this.service.listBooksCategories(search);
     return { status: 200, body: body };
   }
 

@@ -82,31 +82,6 @@ authRoutes.get(
   }
 );
 
-authRoutes.get(
-  "/list",
-  ensureAuthenticate,
-  async (request: Request, response: Response) => {
-    /* 
-    #swagger.tags = ['User']
-    #swagger.security = [{
-            "bearerAuth": []
-    }]
-    #swagger.parameters['$ref'] = ['#/components/parameters/PageQuery', '#/components/parameters/PageSizeQuery', '#/components/parameters/SearchQuery'] 
-    #swagger.responses[200] = {
-            content: {
-                "application/json": {
-                    schema:{
-                        $ref: "#/components/schemas/UserResponse"
-                    }
-                }           
-            }
-        }   
-    */
-    const { status, body } = await authController.list(request);
-    response.status(status).json(body);
-  }
-);
-
 authRoutes.patch(
   "/patch",
   ensureAuthenticate,

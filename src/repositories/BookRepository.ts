@@ -17,11 +17,11 @@ export class BookRepository {
     try {
       await prisma.book.create({
         data: {
-          title,
+          title: title.toLocaleLowerCase(),
           cod,
-          editora,
-          autor,
-          sinopse,
+          editora: editora.toLocaleLowerCase(),
+          autor: autor.toLocaleLowerCase(),
+          sinopse: sinopse.toLocaleLowerCase(),
           bookCategoryId,
           qtd,
           idUser,
@@ -33,117 +33,220 @@ export class BookRepository {
     }
   }
 
-  // findById
-  async findById(id: string) {
-    const book = await prisma.book.findFirst({
-      where: { id },
-    });
-    return book ? new Book(book) : null;
-  }
-
-  // findByTitle
-  async findByTitle(title: string) {
-    const book = await prisma.book.findFirst({
-      where: { title },
-    });
-    return book ? new Book(book) : null;
-  }
-
-  // findByCod
-  async findByCod(cod: string) {
-    const book = await prisma.book.findFirst({
-      where: { cod },
-    });
-    return book ? new Book(book) : null;
-  }
-
-  // find by author
-  async findByAuthor(page: number, pageSize: number, autor: string) {
-    const books = await prisma.book.findMany({
-      where: { autor },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
-
-    return books.length > 0 ? books.map((book) => new Book(book)) : null;
-  }
-
-  // find by author and user
-  async findByAuthorAndUser(
-    idUser: string,
-    page: number,
-    pageSize: number,
-    autor: string
-  ) {
-    const books = await prisma.book.findMany({
-      where: { idUser, autor },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
-
-    return books.length > 0 ? books.map((book) => new Book(book)) : null;
-  }
-
-  // find by category
-  async findByCategory(page: number, pageSize: number, category: string) {
-    const books = await prisma.book.findMany({
-      where: { bookCategoryId: category },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
-
-    return books.length > 0 ? books.map((book) => new Book(book)) : null;
-  }
-
-  // find by category and user
-  async findByCategoryAndUser(
-    idUser: string,
-    page: number,
-    pageSize: number,
-    category: string
-  ) {
-    const books = await prisma.book.findMany({
-      where: { idUser, bookCategoryId: category },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
-
-    return books.length > 0 ? books.map((book) => new Book(book)) : null;
-  }
-
   // find
   async find(page: number, pageSize: number) {
     const books = await prisma.book.findMany({
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
+    const totalItems = (await prisma.book.findMany()).length;
+    return books
+      ? {
+          totalItems,
+          books: books
+            .map((book) => new Book(book))
+            .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()),
+        }
+      : books;
+  }
 
-    return books.length > 0 ? books.map((book) => new Book(book)) : [];
+  // find by category
+  async findByCategory(page: number, pageSize: number, categoryId: string) {
+    const books = await prisma.book.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      where: {
+        bookCategoryId: categoryId,
+      },
+    });
+    const totalItems = (
+      await prisma.book.findMany({
+        where: {
+          bookCategoryId: categoryId,
+        },
+      })
+    ).length;
+    return books
+      ? {
+          totalItems,
+          books: books
+            .map((book) => new Book(book))
+            .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()),
+        }
+      : books;
+  }
+
+  // find by category and search
+  async findByCategoryAndSearch(
+    page: number,
+    pageSize: number,
+    categoryId: string,
+    search: string
+  ) {
+    let books: Book[] = [];
+    (
+      await prisma.book.findMany({
+        where: {
+          bookCategoryId: categoryId,
+        },
+      })
+    ).map((book) => {
+      if (
+        book.autor.includes(search.toLocaleLowerCase()) ||
+        book.cod.includes(search) ||
+        book.editora.includes(search.toLocaleLowerCase()) ||
+        book.id === search ||
+        book.sinopse.includes(search.toLocaleLowerCase()) ||
+        book.title.includes(search.toLocaleLowerCase())
+      ) {
+        books.push(book);
+      }
+    });
+    books.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+    const totalItems = books.length;
+    books = getPag(books, page, pageSize);
+    return books
+      ? { totalItems, books: books.map((book) => new Book(book)) }
+      : books;
+  }
+
+  // find by search
+  async findBySearch(page: number, pageSize: number, search: string) {
+    let books: Book[] = [];
+    (await prisma.book.findMany()).map((book) => {
+      if (
+        book.autor.includes(search.toLocaleLowerCase()) ||
+        book.cod.includes(search) ||
+        book.editora.includes(search.toLocaleLowerCase()) ||
+        book.id === search ||
+        book.sinopse.includes(search.toLocaleLowerCase()) ||
+        book.title.includes(search.toLocaleLowerCase())
+      ) {
+        books.push(book);
+      }
+    });
+    books.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+    const totalItems = books.length;
+    books = getPag(books, page, pageSize);
+    return books
+      ? { totalItems, books: books.map((book) => new Book(book)) }
+      : books;
   }
 
   // findByUser
   async findByUser(idUser: string, page: number, pageSize: number) {
     const books = await prisma.book.findMany({
-      where: { idUser },
       skip: (page - 1) * pageSize,
       take: pageSize,
-    });
-
-    return books.length > 0 ? books.map((book) => new Book(book)) : [];
-  }
-
-  // contAll
-  async countAll() {
-    const books = await prisma.book.findMany();
-    return books.length;
-  }
-
-  // contAllByUser
-  async countAllByUser(idUser: string) {
-    const books = await prisma.book.findMany({
       where: { idUser },
     });
-    return books.length;
+    const totalItems = (await prisma.book.findMany({ where: { idUser } }))
+      .length;
+    return books
+      ? {
+          totalItems,
+          books: books
+            .map((book) => new Book(book))
+            .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()),
+        }
+      : books;
+  }
+
+  // find by User and search
+  async findByUserAndSearch(
+    page: number,
+    pageSize: number,
+    search: string,
+    idUser: string
+  ) {
+    let books: Book[] = [];
+    (await prisma.book.findMany({ where: { idUser } })).map((book) => {
+      if (
+        book.autor.includes(search.toLocaleLowerCase()) ||
+        book.cod.includes(search) ||
+        book.editora.includes(search.toLocaleLowerCase()) ||
+        book.id === search ||
+        book.sinopse.includes(search.toLocaleLowerCase()) ||
+        book.title.includes(search.toLocaleLowerCase())
+      ) {
+        books.push(book);
+      }
+    });
+    books.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+    const totalItems = books.length;
+    books = getPag(books, page, pageSize);
+    return books
+      ? { totalItems, books: books.map((book) => new Book(book)) }
+      : books;
+  }
+
+  // find by user and category
+  async findByUserAndCategory(
+    page: number,
+    pageSize: number,
+    categoryId: string,
+    idUser: string
+  ) {
+    const books = await prisma.book.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      where: {
+        bookCategoryId: categoryId,
+        idUser,
+      },
+    });
+    const totalItems = (
+      await prisma.book.findMany({
+        where: {
+          bookCategoryId: categoryId,
+          idUser,
+        },
+      })
+    ).length;
+    return books
+      ? {
+          totalItems,
+          books: books
+            .map((book) => new Book(book))
+            .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()),
+        }
+      : books;
+  }
+
+  // find by user and category and search
+  async findByUserAndCategoryAndSearch(
+    page: number,
+    pageSize: number,
+    categoryId: string,
+    search: string,
+    idUser: string
+  ) {
+    let books: Book[] = [];
+    (
+      await prisma.book.findMany({
+        where: {
+          bookCategoryId: categoryId,
+          idUser,
+        },
+      })
+    ).map((book) => {
+      if (
+        book.autor.includes(search.toLocaleLowerCase()) ||
+        book.cod.includes(search) ||
+        book.editora.includes(search.toLocaleLowerCase()) ||
+        book.id === search ||
+        book.sinopse.includes(search.toLocaleLowerCase()) ||
+        book.title.includes(search.toLocaleLowerCase())
+      ) {
+        books.push(book);
+      }
+    });
+    books.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+    const totalItems = books.length;
+    books = getPag(books, page, pageSize);
+    return books
+      ? { totalItems, books: books.map((book) => new Book(book)) }
+      : books;
   }
 
   // patch
@@ -191,37 +294,47 @@ export class BookRepository {
   }
 
   // find books categories
-  async findBooksCategories(page: number, pageSize: number) {
-    const booksCategories = await prisma.bookCategory.findMany({
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
+  async findBooksCategories() {
+    let booksCategories: BookCategory[] = [];
+    booksCategories = await prisma.bookCategory.findMany();
 
-    return booksCategories.length > 0
-      ? booksCategories.map((bookCategory) => new BookCategory(bookCategory))
-      : null;
+    return booksCategories
+      ? booksCategories
+          .map((bookCategory) => new BookCategory(bookCategory))
+          .sort((a, b) => a.name.localeCompare(b.name))
+      : booksCategories;
   }
 
-  // cont all books categories
-  async countAllBooksCategories() {
-    const booksCategories = await prisma.bookCategory.findMany();
-    return booksCategories.length;
-  }
+  // find Category By Search
+  async findBooksCategoriesBySearch(search: string) {
+    let booksCategories: BookCategory[] = [];
 
-  // findCategoryById
-  async findBookCategoryById(id: string) {
-    const bookCategory = await prisma.bookCategory.findFirst({
-      where: { id },
-    });
-    return bookCategory ? new BookCategory(bookCategory) : null;
-  }
+    (
+      await prisma.bookCategory.findMany({
+        where: { id: search },
+      })
+    ).map((bookCategory) => booksCategories.push(bookCategory));
 
-  // find book categorie by name
-  async findBookCategoryByName(name: string) {
-    const bookCategory = await prisma.bookCategory.findFirst({
-      where: { name },
-    });
+    (
+      await prisma.bookCategory.findMany({
+        where: {
+          name: {
+            contains: search.toLocaleLowerCase(),
+          },
+        },
+      })
+    ).map((bookCategory) => booksCategories.push(bookCategory));
 
-    return bookCategory ? new BookCategory(bookCategory) : null;
+    return booksCategories
+      ? booksCategories
+          .map((bookCategory) => new BookCategory(bookCategory))
+          .sort((a, b) => a.name.localeCompare(b.name))
+      : booksCategories;
   }
+}
+
+function getPag<Book>(lista: Book[], page: number, pageSize: number) {
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  return lista.slice(startIndex, endIndex);
 }

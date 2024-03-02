@@ -42,7 +42,7 @@ bookRoutes.post(
 // list
 bookRoutes.get("/list/", async (request: Request, response: Response) => {
   /*
-  #swagger.parameters['$ref'] = ['#/components/parameters/PageQuery', '#/components/parameters/PageSizeQuery', '#/components/parameters/SearchQuery'] 
+  #swagger.parameters['$ref'] = ['#/components/parameters/PageQuery', '#/components/parameters/PageSizeQuery', '#/components/parameters/SearchQuery',  '#/components/parameters/CategoryQuery'] 
   #swagger.responses[200] = {
             content: {
                 "application/json": {
@@ -63,7 +63,7 @@ bookRoutes.get(
   ensureAuthenticate,
   async (request: Request, response: Response) => {
     /*
-    #swagger.parameters['$ref'] = ['#/components/parameters/PageQuery', '#/components/parameters/PageSizeQuery', '#/components/parameters/SearchQuery'] 
+    #swagger.parameters['$ref'] = ['#/components/parameters/PageQuery', '#/components/parameters/PageSizeQuery', '#/components/parameters/SearchQuery',  '#/components/parameters/CategoryQuery'] 
     #swagger.responses[200] = {
               content: {
                   "application/json": {
@@ -140,7 +140,7 @@ bookRoutes.delete(
 // list books categories
 bookRoutes.get("/categories/", async (request: Request, response: Response) => {
   /*
-    #swagger.parameters['$ref'] = ['#/components/parameters/PageQuery', '#/components/parameters/PageSizeQuery', '#/components/parameters/SearchQuery'] 
+    #swagger.parameters['$ref'] = [ '#/components/parameters/SearchQuery'] 
     #swagger.responses[200] = {
             content: {
                 "application/json": {

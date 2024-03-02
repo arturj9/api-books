@@ -64,14 +64,14 @@ const doc = {
         email: "email@email.com",
         password: "password",
       },
-      UserResponse:[{
+      UserResponse:{
         $id: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
         $username: "username",
         $name: "name",
         $email: "email@email.com",
         $createdAt: "year-mouth-day",
         $updatedAt: "year-mouth-day"
-      },],
+      },
       BookRegister: {
         $title: "title",
         $cod: "cod",
@@ -137,6 +137,13 @@ const doc = {
       },
       SearchQuery: {
         name: "search",
+        in: "query",
+        schema: {
+          type: "string",
+        },
+      },
+      CategoryQuery: {
+        name: "categoryId",
         in: "query",
         schema: {
           type: "string",

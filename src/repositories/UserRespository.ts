@@ -14,7 +14,7 @@ export class UserRepository {
       await prisma.user.create({
         data: {
           username,
-          name,
+          name: name.toLocaleLowerCase(),
           email,
           passwordHash,
         },
@@ -49,35 +49,12 @@ export class UserRepository {
     return user ? new User(user) : null;
   }
 
-  // findByName
-  async findByName(name: string) {
-    const user = await prisma.user.findFirst({
-      where: { name },
-    });
-    return user ? new User(user) : null;
-  }
-
   // findByUserName
   async findByUserName(username: string) {
     const user = await prisma.user.findFirst({
       where: { username },
     });
     return user ? new User(user) : null;
-  }
-
-  // find
-  async find(page: number, pageSize: number) {
-    const users = await prisma.user.findMany({
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
-    return users.length > 0 ? users.map((user) => new User(user)) : [];
-  }
-
-  //countAll
-  async countAll() {
-    const users = await prisma.user.findMany();
-    return users.length;
   }
 
   // patch

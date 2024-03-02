@@ -128,49 +128,6 @@
         ]
       }
     },
-    "/api/v1/auth/list": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/PageQuery"
-          },
-          {
-            "$ref": "#/components/parameters/PageSizeQuery"
-          },
-          {
-            "$ref": "#/components/parameters/SearchQuery"
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              }
-            },
-            "description": "OK"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
     "/api/v1/auth/patch": {
       "patch": {
         "tags": [
@@ -295,6 +252,9 @@
           },
           {
             "$ref": "#/components/parameters/SearchQuery"
+          },
+          {
+            "$ref": "#/components/parameters/CategoryQuery"
           }
         ],
         "responses": {
@@ -326,6 +286,9 @@
           },
           {
             "$ref": "#/components/parameters/SearchQuery"
+          },
+          {
+            "$ref": "#/components/parameters/CategoryQuery"
           }
         ],
         "responses": {
@@ -430,12 +393,6 @@
         ],
         "description": "",
         "parameters": [
-          {
-            "$ref": "#/components/parameters/PageQuery"
-          },
-          {
-            "$ref": "#/components/parameters/PageSizeQuery"
-          },
           {
             "$ref": "#/components/parameters/SearchQuery"
           }
@@ -637,44 +594,41 @@
         }
       },
       "UserResponse": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string",
-              "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
-            },
-            "username": {
-              "type": "string",
-              "example": "username"
-            },
-            "name": {
-              "type": "string",
-              "example": "name"
-            },
-            "email": {
-              "type": "string",
-              "example": "email@email.com"
-            },
-            "createdAt": {
-              "type": "string",
-              "example": "year-mouth-day"
-            },
-            "updatedAt": {
-              "type": "string",
-              "example": "year-mouth-day"
-            }
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
           },
-          "required": [
-            "id",
-            "username",
-            "name",
-            "email",
-            "createdAt",
-            "updatedAt"
-          ]
-        }
+          "username": {
+            "type": "string",
+            "example": "username"
+          },
+          "name": {
+            "type": "string",
+            "example": "name"
+          },
+          "email": {
+            "type": "string",
+            "example": "email@email.com"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "year-mouth-day"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "year-mouth-day"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "name",
+          "email",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "BookRegister": {
         "type": "object",
@@ -911,6 +865,13 @@
       },
       "SearchQuery": {
         "name": "search",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "CategoryQuery": {
+        "name": "categoryId",
         "in": "query",
         "schema": {
           "type": "string"

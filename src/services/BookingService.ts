@@ -16,8 +16,8 @@ export class BookingService {
 
   // register
   async register(idUser: string, idBook: string) {
-    const bookExists = await this.bookRepository.findById(idBook);
-    if (!bookExists) throw new AppError("Livro não encontrado", 404);
+    const bookExists = await this.bookRepository.findBySearch(1,1,idBook);
+    if (!bookExists['books']) throw new AppError("Livro não encontrado", 404);
 
     await this.bookingRepository.save(idUser, idBook);
 
