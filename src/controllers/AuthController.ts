@@ -31,6 +31,23 @@ export class AuthController {
     return { status: 200, body: body };
   }
 
+  // verify token
+  async verifyToken(request: Request) {
+    const bodySchema = z
+      .object({
+        token: z.string(),
+      })
+      .strict();
+
+    const { token } = bodySchema.parse(request.query);
+
+    if (await this.service.verifyToken(token)) {
+      return { status: 200, body: { tokenIsValid: true } };
+    } else {
+      return { status: 401, body: { tokenIsValid: false } };
+    }
+  }
+
   // register
   async register(request: Request) {
     const bodySchema = z
@@ -51,39 +68,9 @@ export class AuthController {
   // info
   async info(request: Request) {
     const { idUser } = request;
-    
+
     const body = await this.service.info(idUser);
     return { status: 200, body: body };
-
-  }
-
-  // list
-  async list(request: Request) {
-    const bodySchema = z
-      .object({
-        page: z.string().default("1"),
-        pageSize: z.string().default("10"),
-        search: z.string().default(""),
-      })
-      .strict();
-
-    let { page, pageSize, search } = bodySchema.parse(request.query);
-
-    const pageNumber = parseInt(page, 10);
-
-    // Verifique se a conversão foi bem-sucedida
-    if (isNaN(pageNumber) || pageNumber <= 0)
-      throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
-
-    const pageSizeNumber = parseInt(pageSize, 10);
-
-    // Verifique se a conversão foi bem-sucedida
-    if (isNaN(pageSizeNumber) || pageSizeNumber <= 0)
-      throw new AppError("O parâmetro pageSize deve ser um número e maior que 0.");
-
-    const body = await this.service.list(pageNumber, pageSizeNumber, search);
-    return { status: 200, body: body };
-
   }
 
   // patch
@@ -100,7 +87,6 @@ export class AuthController {
     const { idUser } = request;
     const { username, name, email, password } = bodySchema.parse(request.body);
 
-    
     let data = new UserUpdate(username, name, email);
 
     if (password) {
@@ -117,6 +103,6 @@ export class AuthController {
     const { idUser } = request;
 
     await this.service.delete(idUser);
-    return {status:204, body:null};
+    return { status: 204, body: null };
   }
 }

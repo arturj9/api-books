@@ -1,4 +1,5 @@
 import swaggerAutogen from "swagger-autogen";
+import { boolean } from "zod";
 
 const doc = {
   info: {
@@ -45,11 +46,17 @@ const doc = {
       DefaultResponse:{
         message: "message"
       },
+      BooleanResponse:{
+        $tokenIsValid: "boolean"
+      },
       LoginRequest: {
         $email: "email@email.com",
         $password: "password",
       },
       LoginResponse:{
+        $token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDcyMTgyOTgsImV4cCI6MTcwNzMwNDY5OCwic3ViIjoiZmQ3MmIyMzMtMzJmNi00Y2ZiLWE1ZmEtMTk0NDY3MmJiM2E0In0.JPQGJRaXsZG4UakiXbT2AZyxKmk9JhWtmFBxzZxRdTY"
+      },
+      TokenRequest:{
         $token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDcyMTgyOTgsImV4cCI6MTcwNzMwNDY5OCwic3ViIjoiZmQ3MmIyMzMtMzJmNi00Y2ZiLWE1ZmEtMTk0NDY3MmJiM2E0In0.JPQGJRaXsZG4UakiXbT2AZyxKmk9JhWtmFBxzZxRdTY"
       },
       UserRegister: {
@@ -121,6 +128,13 @@ const doc = {
       },],
     },
     parameters: {
+      Token: {
+        name: "token",
+        in: "query",
+        schema: {
+          type: "string",
+        },
+      },
       PageQuery: {
         name: "page",
         in: "query",

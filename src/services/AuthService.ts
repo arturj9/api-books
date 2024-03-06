@@ -31,6 +31,16 @@ export class AuthService {
     return { token: token };
   }
 
+  // verify token
+  async verifyToken(token: string) {
+    try {
+      jwt.verify(token, config_values.jwt_key);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   // register
   async register(
     username: string,

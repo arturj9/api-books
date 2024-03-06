@@ -64,6 +64,31 @@
         }
       }
     },
+    "/api/v1/auth/verify": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/v1/auth/register": {
       "post": {
         "tags": [
@@ -516,6 +541,18 @@
           }
         }
       },
+      "BooleanResponse": {
+        "type": "object",
+        "properties": {
+          "tokenIsValid": {
+            "type": "string",
+            "example": "boolean"
+          }
+        },
+        "required": [
+          "tokenIsValid"
+        ]
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -534,6 +571,18 @@
         ]
       },
       "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDcyMTgyOTgsImV4cCI6MTcwNzMwNDY5OCwic3ViIjoiZmQ3MmIyMzMtMzJmNi00Y2ZiLWE1ZmEtMTk0NDY3MmJiM2E0In0.JPQGJRaXsZG4UakiXbT2AZyxKmk9JhWtmFBxzZxRdTY"
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "TokenRequest": {
         "type": "object",
         "properties": {
           "token": {
@@ -849,6 +898,13 @@
       }
     },
     "parameters": {
+      "Token": {
+        "name": "token",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
       "PageQuery": {
         "name": "page",
         "in": "query",
