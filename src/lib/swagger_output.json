@@ -72,6 +72,13 @@
         "description": "",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "$ref": "#/components/parameters/Token"
           }
         ],
@@ -335,7 +342,7 @@
         ]
       }
     },
-    "/api/v1/books/patch/{id}": {
+    "/api/v1/books/patch/": {
       "patch": {
         "tags": [
           "Book"
@@ -343,12 +350,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/IdBookQuery"
           }
         ],
         "responses": {
@@ -380,7 +382,7 @@
         }
       }
     },
-    "/api/v1/books/delete/{id}": {
+    "/api/v1/books/delete/": {
       "delete": {
         "tags": [
           "Book"
@@ -388,12 +390,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "$ref": "#/components/parameters/IdBookQuery"
           }
         ],
         "responses": {
@@ -898,6 +895,13 @@
       }
     },
     "parameters": {
+      "IdBookQuery": {
+        "name": "id",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        }
+      },
       "Token": {
         "name": "token",
         "in": "query",

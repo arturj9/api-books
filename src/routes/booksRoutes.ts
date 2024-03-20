@@ -84,10 +84,11 @@ bookRoutes.get(
 
 // patch
 bookRoutes.patch(
-  "/patch/:id",
+  "/patch/",
   ensureAuthenticate,
   async (request: Request, response: Response) => {
     /*
+    #swagger.parameters['$ref'] = [ '#/components/parameters/IdBookQuery'] 
     #swagger.requestBody = {
             required: true,
             content: {
@@ -118,10 +119,11 @@ bookRoutes.patch(
 
 // delete
 bookRoutes.delete(
-  "/delete/:id",
+  "/delete/",
   ensureAuthenticate,
   async (request: Request, response: Response) => {
     /*
+    #swagger.parameters['$ref'] = [ '#/components/parameters/IdBookQuery'] 
     #swagger.security = [{
             "bearerAuth": []
     }]

@@ -31,7 +31,10 @@ authRoutes.post("/login", async (request: Request, response: Response) => {
   response.status(status).json(body);
 });
 
-authRoutes.get("/verify", async (request: Request, response: Response) => {
+authRoutes.get(
+  "/verify",
+  ensureAuthenticate,
+  async (request: Request, response: Response) => {
     /* 
     #swagger.tags = ['Auth']
     #swagger.parameters['$ref'] = ['#/components/parameters/Token',]
@@ -47,7 +50,8 @@ authRoutes.get("/verify", async (request: Request, response: Response) => {
     */
     const { status, body } = await authController.verifyToken(request);
     response.status(status).json(body);
-  });
+  }
+);
 
 authRoutes.post("/register", async (request: Request, response: Response) => {
   /*

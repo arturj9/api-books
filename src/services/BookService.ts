@@ -22,15 +22,15 @@ export class BookService {
   ) {
     const bookCategoryIdExists =
       await this.repository.findBooksCategoriesBySearch(bookCategoryId);
-    if (!bookCategoryIdExists)
+    if (!bookCategoryIdExists[0])
       throw new AppError("Categoria de livro não encontrada", 404);
 
     const titleExists = await this.repository.findBySearch(1, 1, title);
-    if (titleExists["books"])
+    if (titleExists["books"][0])
       throw new AppError("Título de livro já existe", 409);
 
     const codExists = await this.repository.findBySearch(1, 1, cod);
-    if (codExists["books"])
+    if (codExists["books"][0])
       throw new AppError("Código de livro já existe", 409);
 
     await this.repository.save(
@@ -163,7 +163,9 @@ export class BookService {
   async listBooksCategories(search: string) {
     let booksCategories: BookCategory[] = [];
     if (search !== "") {
-      booksCategories = await this.repository.findBooksCategoriesBySearch(search);
+      booksCategories = await this.repository.findBooksCategoriesBySearch(
+        search
+      );
     } else {
       booksCategories = await this.repository.findBooksCategories();
     }
@@ -176,31 +178,40 @@ export class BookService {
   // patch
   async patch(idUser: string, id: string, data: BookUpdate) {
     const livroExists = await this.repository.findBySearch(1, 1, id);
-    if (!livroExists["books"]) throw new AppError("Livro não cadastrado", 404);
+    if (!livroExists["books"][0])
+      throw new AppError("Livro não cadastrado", 404);
 
     if (livroExists["books"][0].idUser != idUser)
       throw new AppError("Não autorizado", 401);
 
     if (data.title) {
-      data.title ? null : (data.title = "");
       const livroExists = await this.repository.findBySearch(1, 1, data.title);
-      if (livroExists["books"])
-        throw new AppError("Título de livro já cadastrado", 409);
+      if (livroExists["books"]) {
+        if (livroExists["books"][0]) {
+          if (livroExists["books"][0].title == data.title) {
+            throw new AppError("Título de livro já cadastrado", 409);
+          }
+        }
+      }
     }
 
     if (data.cod) {
-      data.cod ? null : (data.cod = "");
       const livroExists = await this.repository.findBySearch(1, 1, data.cod);
-      if (livroExists["books"])
-        throw new AppError("Código de livro já cadastrado", 409);
+      if (livroExists["books"]) {
+        if (livroExists["books"][0]) {
+          if (livroExists["books"][0].cod == data.cod) {
+            throw new AppError("Código de livro já cadastrado", 409);
+          }
+        }
+      }
     }
 
     if (data.bookCategoryId) {
-      data.bookCategoryId ? null : (data.bookCategoryId = "");
       const bookCategoryIdExists =
         await this.repository.findBooksCategoriesBySearch(data.bookCategoryId);
-      if (!bookCategoryIdExists)
+      if (!bookCategoryIdExists[0]) {
         throw new AppError("Categoria de livro não encontrada", 404);
+      }
     }
 
     await this.repository.patch(id, data);

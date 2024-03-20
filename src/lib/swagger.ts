@@ -128,6 +128,13 @@ const doc = {
       },],
     },
     parameters: {
+      IdBookQuery:{
+        name: "id",
+        in: "query",
+        schema: {
+          type: "string",
+        },
+      },
       Token: {
         name: "token",
         in: "query",

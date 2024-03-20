@@ -144,24 +144,29 @@ export class BookController {
   async patch(request: Request) {
     const bodySchema = z
       .object({
-        title: z.string().min(1).nullish(),
-        cod: z.string().min(1).nullish(),
-        editora: z.string().min(1).nullish(),
-        autor: z.string().min(1).nullish(),
-        sinopse: z.string().min(1).nullish(),
-        bookCategoryId: z.string().min(1).nullish(),
+        title: z.string().nullish(),
+        cod: z.string().nullish(),
+        editora: z.string().nullish(),
+        autor: z.string().nullish(),
+        sinopse: z.string().nullish(),
+        bookCategoryId: z.string().nullish(),
         qtd: z.number().min(0).nullish(),
       })
       .strict();
+    
+    const query = z.object({
+      id: z.string()
+    }).strict()
 
-    const { id } = request.params;
+    
+    const { idUser } = request;
+    
+    const { title, cod, editora, autor, sinopse, bookCategoryId, qtd} =
+    bodySchema.parse(request.body);
+    
+    const {id} = query.parse(request.query)
 
     if (!id) throw new AppError("id de livro é requerido", 409);
-
-    const { idUser } = request;
-
-    const { title, cod, editora, autor, sinopse, bookCategoryId, qtd } =
-      bodySchema.parse(request.body);
 
     let data = new BookUpdate(
       title,
@@ -179,7 +184,13 @@ export class BookController {
 
   // delete
   async delete(request: Request) {
-    const { id } = request.params;
+    const bodySchema = z
+      .object({
+        id: z.string(),
+      })
+      .strict();
+
+    const { id } = bodySchema.parse(request.query);
 
     if (!id) throw new AppError("id de livro é requerido", 409);
 
